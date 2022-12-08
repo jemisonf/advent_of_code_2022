@@ -13,38 +13,16 @@ file = /(?<size>\d+) (?<name>.+)/
 current_dir = tree
 
 contents.each do |line| 
-    cdmatch = cd.match(line)
-
-    if cdmatch
+    if cdmatch = cd.match(line)
         new_dir = current_dir[cdmatch["dir"]]
 
         new_dir[".."] = current_dir if cdmatch["dir"] != ".."
 
         current_dir = new_dir
-        
-
-        next
-    end
-
-    lsmatch = ls.match(line)
-
-    if lsmatch
-        next
-    end
-
-    dirmatch = dir.match(line)
-
-    if dirmatch
-        # puts dirmatch
+    elsif dirmatch = dir.match(line)
         current_dir[dirmatch["dir"]] = {"size" => 0, "name" => dirmatch["dir"]}
-        # puts current_dir
-
         next
-    end
-
-    filematch = file.match(line)
-
-    if filematch
+    elsif filematch = file.match(line)
         size = filematch["size"] 
 
         current_dir["size"] += size.to_i
